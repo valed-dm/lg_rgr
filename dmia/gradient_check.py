@@ -14,7 +14,7 @@ def eval_numerical_gradient(f, x):
     h = 0.00001
 
     # iterate over all indexes in x
-    it = np.nditer(x, flags=['multi_index'], op_flags=['readwrite'])
+    it = np.nditer(x, flags=['multi_index'], op_flags=[['readwrite']])
     while not it.finished:
         # evaluate function at x+h
         ix = it.multi_index
@@ -35,6 +35,7 @@ def grad_check_sparse(f, x, analytic_grad, num_checks):
   in these dimensions.
   """
     h = 1e-5
+    epsilon = 1e-8
 
     for i in range(num_checks):
         ix = tuple([randrange(m) for m in x.shape])
@@ -47,5 +48,5 @@ def grad_check_sparse(f, x, analytic_grad, num_checks):
 
         grad_numerical = (fxph - fxmh) / (2 * h)
         grad_analytic = analytic_grad[ix]
-        rel_error = abs(grad_numerical - grad_analytic) / (abs(grad_numerical) + abs(grad_analytic))
+        rel_error = abs(grad_numerical - grad_analytic) / (abs(grad_numerical) + abs(grad_analytic) + epsilon)
         print('numerical: %f analytic: %f, relative error: %e' % (grad_numerical, grad_analytic, rel_error))
